@@ -15,19 +15,21 @@
   </style>
   <script>
     async function loadData(){
-      const res = await fetch('https://raw.githubusercontent.com/gauravlasaria/gauravlasaria.github.io/main/logs/credit.log');
-      if(!res.ok){ return; }
-      const text = await res.text();
-      const lines = text.trim().split("\n").slice(-20).reverse();
-      let total = 0;
-      let items = '';
-      lines.forEach(l=>{
-        items += '<li>'+l+'</li>';
-        const m = l.match(/total now: ([0-9.]+)/);
-        if(m){ total = m[1]; }
-      });
-      document.getElementById('list').innerHTML = items;
-      document.getElementById('total').innerText = "💰 Total Credits: " + total;
+      try {
+        const res = await fetch('/logs/credit.log');
+        if(!res.ok){ return; }
+        const text = await res.text();
+        const lines = text.trim().split("\n").slice(-20).reverse();
+        let total = 0;
+        let items = '';
+        lines.forEach(l=>{
+          items += '<li>'+l+'</li>';
+          const m = l.match(/total now: ([0-9.]+)/);
+          if(m){ total = m[1]; }
+        });
+        document.getElementById('list').innerHTML = items;
+        document.getElementById('total').innerText = "💰 Total Credits: " + total;
+      } catch(e){}
     }
     setInterval(loadData, 60000);
     window.onload=loadData;
