@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GoGreen Earnings Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f9fff9; margin:0; padding:0; }
+    header { background:#228B22; color:#fff; padding:1em; text-align:center; }
+    h1 { margin:0; font-size:1.8em; }
+    #total { font-size:1.4em; margin:1em; color:#333; }
+    ul { list-style:none; padding:0; margin:0; }
+    li { background:#e9ffe9; margin:0.5em; padding:0.8em; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1); }
+    footer { text-align:center; padding:1em; font-size:0.9em; color:#666; }
+  </style>
+  <script>
+    async function loadData(){
+      const res = await fetch('https://raw.githubusercontent.com/gauravlasaria/gauravlasaria.github.io/main/logs/credit.log');
+      if(!res.ok){ return; }
+      const text = await res.text();
+      const lines = text.trim().split("\n").slice(-20).reverse();
+      let total = 0;
+      let items = '';
+      lines.forEach(l=>{
+        items += '<li>'+l+'</li>';
+        const m = l.match(/total now: ([0-9.]+)/);
+        if(m){ total = m[1]; }
+      });
+      document.getElementById('list').innerHTML = items;
+      document.getElementById('total').innerText = "💰 Total Credits: " + total;
+    }
+    setInterval(loadData, 60000);
+    window.onload=loadData;
+  </script>
+</head>
+<body>
+  <header><h1>🌱 GoGreen Earnings Dashboard</h1></header>
+  <div id="total">Loading...</div>
+  <ul id="list"></ul>
+  <footer>Auto-updated every 60s • Powered by GodAI</footer>
+</body>
+</html>
